@@ -1,0 +1,118 @@
+version: "3.9"
+services:
+  namenode1:
+    image: hadoop
+    hostname: namenode1
+    ports:
+      - 8088:8088
+      - 8032:8032
+      - 9870:9870
+      - 50070:50070
+      - 50075:50075
+    volumes:
+      - nn1-data:/dfs
+      - nn1-conf:/opt/hadoop/etc/hadoop
+    networks:
+      hadoop:
+        ipv4_address: 192.168.10.10
+    extra_hosts:
+      - "namenode2: 192.168.10.11"
+      - "datanode: 192.168.10.12"
+      - "thangdv: 192.168.10.1"
+      - "sparknode: 192.168.10.20"
+
+  namenode2:
+    image: hadoop
+    hostname: namenode2
+    volumes:
+      - nn2-data:/dfs
+      - nn2-conf:/opt/hadoop/etc/hadoop
+    ports:
+      - 9871:9870
+    networks:
+      hadoop:
+        ipv4_address: 192.168.10.11
+    extra_hosts:
+      - "namenode1: 192.168.10.10"
+      - "datanode: 192.168.10.12"
+      - "thangdv: 192.168.10.1"
+      - "sparknode: 192.168.10.20"
+
+  datanode:
+    image: hadoop
+    hostname: datanode
+    volumes:
+      - dn-data:/dfs
+      - dn-conf:/opt/hadoop/etc/hadoop
+    networks:
+      hadoop:
+        ipv4_address: 192.168.10.12
+    extra_hosts:
+      - "namenode1: 192.168.10.10"
+      - "namenode2: 192.168.10.11"
+      - "thangdv: 192.168.10.1"
+
+  sparknode:
+    image: spark-v2
+    hostname: spark
+    volumes:
+      - sp-conf:/opt/spark/conf
+    networks:
+      hadoop:
+        ipv4_address: 192.168.10.20
+    extra_hosts:
+      - "namenode1: 192.168.10.10"
+      - "namenode2: 192.168.10.11"
+      - "thangdv: 192.168.10.1"
+
+networks:
+  hadoop:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.10.0/16
+          gateway: 192.168.10.1
+
+volumes:
+  nn1-data:
+    driver: local
+    driver_opts:
+      type: bind
+      device: ./namenode1/data
+      o: bind
+  nn1-conf:
+    driver: local
+    driver_opts:
+      type: bind
+      device: ./namenode1/conf
+      o: bind
+  nn2-data:
+    driver: local
+    driver_opts:
+      type: bind
+      device: ./namenode2/data
+      o: bind
+  nn2-conf:
+    driver: local
+    driver_opts:
+      type: bind
+      device: ./namenode2/conf
+      o: bind
+  dn-data:
+    driver: local
+    driver_opts:
+      type: bind
+      device: ./datanode/data
+      o: bind
+  dn-conf:
+    driver: local
+    driver_opts:
+      type: bind
+      device: ./datanode/conf
+      o: bind
+  sp-conf:
+    driver: local
+    driver_opts:
+      type: bind
+      device: ./sparknode/conf
+      o: bind
