@@ -1,7 +1,8 @@
 version: "3.9"
 services:
   namenode1:
-    image: hadoop
+    # image: hadoop
+    build: ./hadoop
     hostname: namenode1
     ports:
       - 8088:8088
@@ -20,9 +21,13 @@ services:
       - "datanode: 192.168.10.12"
       - "thangdv: 192.168.10.1"
       - "sparknode: 192.168.10.20"
+      - "zoo1: 192.168.10.31"
+      - "zoo2: 192.168.10.32"
+      - "zoo3: 192.168.10.33"
 
   namenode2:
-    image: hadoop
+    # image: hadoop
+    build: ./hadoop
     hostname: namenode2
     volumes:
       - nn2-data:/dfs
@@ -37,9 +42,13 @@ services:
       - "datanode: 192.168.10.12"
       - "thangdv: 192.168.10.1"
       - "sparknode: 192.168.10.20"
+      - "zoo1: 192.168.10.31"
+      - "zoo2: 192.168.10.32"
+      - "zoo3: 192.168.10.33"
 
   datanode:
-    image: hadoop
+    # image: hadoop
+    build: ./hadoop
     hostname: datanode
     volumes:
       - dn-data:/dfs
@@ -53,7 +62,8 @@ services:
       - "thangdv: 192.168.10.1"
 
   sparknode:
-    image: spark-v2
+    # image: spark
+    build: ./spark
     hostname: spark
     volumes:
       - sp-conf:/opt/spark/conf
@@ -64,6 +74,57 @@ services:
       - "namenode1: 192.168.10.10"
       - "namenode2: 192.168.10.11"
       - "thangdv: 192.168.10.1"
+
+  zoo1:
+    image: zookeeper
+    hostname: zoo1
+    ports:
+      - 2181:2181
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181 server.3=zoo3:2888:3888;2181
+    networks:
+      hadoop:
+        ipv4_address: 192.168.10.31
+    extra_hosts:
+      - "namenode1: 192.168.10.10"
+      - "namenode2: 192.168.10.11"
+      - "zoo2: 192.168.10.32"
+      - "zoo3: 192.168.10.33"
+
+  zoo2:
+    image: zookeeper
+    hostname: zoo2
+    ports:
+      - 2182:2181
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_SERVERS: server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181 server.3=zoo3:2888:3888;2181
+    networks:
+      hadoop:
+        ipv4_address: 192.168.10.32
+    extra_hosts:
+      - "namenode1: 192.168.10.10"
+      - "namenode2: 192.168.10.11"
+      - "zoo1: 192.168.10.31"
+      - "zoo3: 192.168.10.33"
+
+  zoo3:
+    image: zookeeper
+    hostname: zoo3
+    ports:
+      - 2183:2181
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_SERVERS: server.1=zoo1:2888:3888;2181 server.2=zoo2:2888:3888;2181 server.3=zoo3:2888:3888;2181
+    networks:
+      hadoop:
+        ipv4_address: 192.168.10.33
+    extra_hosts:
+      - "namenode1: 192.168.10.10"
+      - "namenode2: 192.168.10.11"
+      - "zoo1: 192.168.10.31"
+      - "zoo2: 192.168.10.32"
 
 networks:
   hadoop:

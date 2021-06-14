@@ -85,7 +85,48 @@
     <value>true</value>
   </property>
   <property>
-    <name>dfs.ha.nn.not-become-active-in-safemode</name>
-    <value>true</value>
+    <name>ha.zookeeper.quorum</name>
+    <value>zoo1:2181,zoo2:2181,zoo3:2181</value>
   </property>
-</configuration>
+</configuration> <!-- <property>
+  <name>dfs.ha.namenodes.hadoopbigdata</name>
+  <value>hadoop4820,hadoop4821</value>
+</property><property>
+  <name>dfs.namenode.rpc-address.hadoopbigdata.hadoop4820</name>
+  <value>hadoop4820:9000</value>
+</property><property>
+  <name>dfs.namenode.http-address.hadoopbigdata.hadoop4820</name>
+  <value>hadoop4820:50070</value>
+</property><property>
+  <name>dfs.namenode.rpc-address.hadoopbigdata.hadoop4821</name>
+  <value>hadoop4821:9000</value>
+</property><property>
+  <name>dfs.namenode.http-address.hadoopbigdata.hadoop4821</name>
+  <value>hadoop4821:50070</value>
+</property>
+<property>
+  <name>dfs.namenode.shared.edits.dir</name>
+  <value>qjournal://hadoop4820:8485;hadoop4821:8485;hadoop4822:8485/hadoopbigdata</value>
+</property><property>
+  <name>dfs.client.failover.proxy.provider.hadoopbigdata</name>
+  <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
+</property><property>
+  <name>dfs.ha.fencing.methods</name>
+  <value>sshfence</value>
+</property><property>
+  <name>dfs.ha.fencing.ssh.private-key-files</name>
+  <value>/home/hdfs/.ssh/id_rsa</value>
+</property><property>
+  <name>dfs.ha.fencing.methods</name>
+  <value>sshfence(hdfs:2395)</value>
+</property><property>
+  <name>dfs.journalnode.edits.dir</name>
+  <value>/data1/hadoop/journal</value>
+</property>
+<property>
+  <name>dfs.ha.automatic-failover.enabled</name>
+  <value>true</value>
+</property><property>
+  <name>ha.zookeeper.quorum</name>
+  <value>hadoop4820:2181,hadoop4821:2181,hadoop4822:2181</value>
+</property> -->
