@@ -7,7 +7,15 @@
 
 ## Run
 
+> Cluster has:
+>
+> - 2 namenode
+> - 1 datanode
+> - 1 sparknode
+> - 3 zookeeper
+
 Move to project (pwd = .../hadoop_cluster)
+
 Start all containers
 
 ```sh
